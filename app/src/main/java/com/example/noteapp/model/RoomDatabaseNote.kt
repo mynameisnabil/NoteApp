@@ -11,24 +11,24 @@ abstract class RoomDatabaseNote : RoomDatabase() {
 
     abstract fun noteDao(): NoteDao
 
-    companion object{
+    companion object {
 
-            @Volatile
-            private var INSTANCE: RoomDatabase? = null
+        @Volatile
+        private var INSTANCE: RoomDatabaseNote? = null
 
-            fun getDatabase(context: Context): RoomDatabaseNote {
-                return (INSTANCE ?: synchronized(this) {
-                    val instance = Room.databaseBuilder(
-                        context,
-                        RoomDatabase::class.java,
-                        "note_database"
-                    )
-                        .fallbackToDestructiveMigration()
-                        .build()
+        fun getDatabase(context: Context): RoomDatabaseNote {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context,
+                    RoomDatabaseNote::class.java,
+                    "note_database"
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
 
-                    INSTANCE = instance
-                    instance
-                }) as RoomDatabaseNote
+                INSTANCE = instance
+                instance
             }
+        }
     }
 }
