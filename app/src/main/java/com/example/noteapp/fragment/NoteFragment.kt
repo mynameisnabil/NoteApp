@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.noteapp.Application
 import com.example.noteapp.adapter.NoteListAdapter
 import com.example.noteapp.databinding.FragmentNoteBinding
@@ -20,7 +19,6 @@ class NoteFragment : Fragment() {
     private var _binding: FragmentNoteBinding? = null
     private val binding get() = _binding!!
 
-    // Don't forget to put 'name' attribute (application) in AndroidManifest.xml
     private val viewModel: NoteViewModel by activityViewModels {
         NoteViewModelFactory(
             (activity?.application as Application).database.noteDao()
@@ -39,7 +37,7 @@ class NoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Notes list
+
         val adapter = NoteListAdapter { selectedNoted ->
             val action = NoteFragmentDirections.actionNotesFragmentToAddNoteFragment(selectedNoted.id)
             this.findNavController().navigate(action)
@@ -52,13 +50,16 @@ class NoteFragment : Fragment() {
                 }
             }
         }
-        binding.notelist.layoutManager = LinearLayoutManager(this.context)
+
+
+        val spanCount = 2
+        val layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
+        binding.notelist.layoutManager = layoutManager
 
         // Add note button
         binding.addNote.setOnClickListener {
-            val action = NoteFragmentDirections.actionNotesFragmentToAddNoteFragment(-1);
+            val action = NoteFragmentDirections.actionNotesFragmentToAddNoteFragment(-1)
             this.findNavController().navigate(action)
-
         }
     }
 
